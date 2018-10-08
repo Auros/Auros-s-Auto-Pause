@@ -13,74 +13,69 @@ namespace AurosAutoPause
         {
             SceneManager.activeSceneChanged += SceneManagerOnActiveSceneChanged;
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
-            
         }
-
         private void SceneManagerOnActiveSceneChanged(Scene arg0, Scene arg1)
         {
         }
-
         private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
         {
         }
-
         public void OnApplicationQuit()
         {
             SceneManager.activeSceneChanged -= SceneManagerOnActiveSceneChanged;
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
         }
-
         public void OnLevelWasLoaded(int level)
         {
-            GameplayManager PMM = Resources.FindObjectsOfTypeAll<GameplayManager>().FirstOrDefault();
-            if (PMM != null)
-            {
-                PMM.ResumeFromPause();
-            }
         }
 
         public void OnLevelWasInitialized(int level)
         {
         }
 
-        public float despacito;
-        //ignore that ^^^
+        //This is where the plugin starts!
 
+        //Defining the time to repeat the OnUpdate Function
         private float nextActionTime = 0.0f;
         public float period = 0.1f;
 
-        private static Vector3 text;
-        private static Vector3 text2;
+        //Previous Saber Values
+        private static Vector3 PreviousLeftSaberHandleLocation;
+        private static Vector3 PreviousLeftSaberHandleLocation2;
 
+        //Repeat The Thing
         public void OnUpdate()
         {
+            //Slowing The Repeat Thing
             if (Time.time > nextActionTime)
             {
                 nextActionTime += period;
 
+                //Loading In Things I Need
                 PlayerController HEL = Resources.FindObjectsOfTypeAll<PlayerController>().FirstOrDefault();
+                GamePauseManager GMM = Resources.FindObjectsOfTypeAll<GamePauseManager>().FirstOrDefault();
+                GameplayManager PMM = Resources.FindObjectsOfTypeAll<GameplayManager>().FirstOrDefault();
+
+                //Finding Saber Location
                 if (HEL == null)
                     return;
                 Saber SaberThatIsLeft = HEL.leftSaber;
                 Saber SaberThatIsRight = HEL.rightSaber;
-
                 Vector3 LeftSaberHandleLocation = SaberThatIsLeft.handlePos;
                 Vector3 RightSaberHandleLocation = SaberThatIsRight.handlePos;
 
-                GamePauseManager GMM = Resources.FindObjectsOfTypeAll<GamePauseManager>().FirstOrDefault();
+                //When the game is paused, saber position freezes. This if statement is to make sure that when the game is unpaused, it doesn't take the value which set off the tracking issue in the first place (if that makes any sense)
                 if (GMM != null && GMM.pause == true)
                 {
-                    text = RightSaberHandleLocation;
-                    text2 = LeftSaberHandleLocation;
+                    PreviousLeftSaberHandleLocation = RightSaberHandleLocation;
+                    PreviousLeftSaberHandleLocation2 = LeftSaberHandleLocation;
                 }
                 else
                 {
                     //FPS CHECKER
-
                     float fps = 1.0f / Time.deltaTime;
                     if (fps < 40.0f)
                     {
-                        GameplayManager PMM = Resources.FindObjectsOfTypeAll<GameplayManager>().FirstOrDefault();
                         if (PMM != null)
                         {
                             PMM.Pause();
@@ -88,23 +83,20 @@ namespace AurosAutoPause
                     }
 
                     //TRACKING DETECTOR
-
-                    if (text == LeftSaberHandleLocation || text2 == RightSaberHandleLocation)
+                    if (PreviousLeftSaberHandleLocation == LeftSaberHandleLocation || PreviousLeftSaberHandleLocation2 == RightSaberHandleLocation)
                     {
-                        GameplayManager PMM = Resources.FindObjectsOfTypeAll<GameplayManager>().FirstOrDefault();
                         if (PMM != null)
                         {
                             PMM.Pause();
                         }
                     }
 
-                    text = LeftSaberHandleLocation;
-                    text2 = RightSaberHandleLocation;
-
+                    //Set Saber Locations To Previous Saber Location
+                    PreviousLeftSaberHandleLocation = LeftSaberHandleLocation;
+                    PreviousLeftSaberHandleLocation2 = RightSaberHandleLocation;
                 }
             }
         }
-
         public void OnFixedUpdate()
         {
         }
