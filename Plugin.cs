@@ -19,6 +19,10 @@ namespace AurosAutoPause
         }
         private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
         {
+            // Discard references to controllers / managers.
+            _HEL = null;
+            _GMM = null;
+            _PMM = null;
         }
         public void OnApplicationQuit()
         {
@@ -35,6 +39,42 @@ namespace AurosAutoPause
 
         //This is where the plugin starts!
 
+        PlayerController _HEL;
+        PlayerController HEL
+        {
+            get
+            {
+                if (_HEL == null)
+                    _HEL = Resources.FindObjectsOfTypeAll<PlayerController>().FirstOrDefault();
+                    
+                return _HEL;
+            }
+        }
+        
+        GamePauseManager _GMM;
+        GamePauseManager GMM
+        {
+            get
+            {
+                if (_GMM == null)
+                    _GMM = Resources.FindObjectsOfTypeAll<GamePauseManager>().FirstOrDefault();
+                    
+                return _GMM;
+            }
+        }
+        
+        GameplayManager _PMM;
+        GameplayManager PMM
+        {
+            get
+            {
+                if (_PMM == null)
+                    _PMM = Resources.FindObjectsOfTypeAll<GameplayManager>().FirstOrDefault();
+                    
+                return _PMM;
+            }
+        }
+
         //Defining the time to repeat the OnUpdate Function
         private float nextActionTime = 0.0f;
         public float period = 0.1f;
@@ -50,11 +90,6 @@ namespace AurosAutoPause
             if (Time.time > nextActionTime)
             {
                 nextActionTime += period;
-
-                //Loading In Things I Need
-                PlayerController HEL = Resources.FindObjectsOfTypeAll<PlayerController>().FirstOrDefault();
-                GamePauseManager GMM = Resources.FindObjectsOfTypeAll<GamePauseManager>().FirstOrDefault();
-                GameplayManager PMM = Resources.FindObjectsOfTypeAll<GameplayManager>().FirstOrDefault();
 
                 //Finding Saber Location
                 if (HEL == null)
