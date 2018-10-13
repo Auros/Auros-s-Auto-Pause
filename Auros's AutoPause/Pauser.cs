@@ -1,58 +1,43 @@
 ﻿using IllusionPlugin;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+using System.Collections;
 using System.Linq;
+using UnityEngine;
 
 namespace AurosAutoPause
 {
-    public class Plugin : IPlugin
+    public class Pauser : MonoBehaviour
     {
-        public string Name => "Auros's AutoPause";
-        public string Version => "0.1.0";
-        public void OnApplicationStart()
+        public static float threshold = 40.0f;
+        public static bool yeet = true;
+
+        public void Awake()
         {
-            SceneManager.activeSceneChanged += SceneManagerOnActiveSceneChanged;
-            SceneManager.sceneLoaded += SceneManager_sceneLoaded;
-        }
-        private void SceneManagerOnActiveSceneChanged(Scene arg0, Scene arg1)
-        {
-        }
-        private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
-        {
-        }
-        public void OnApplicationQuit()
-        {
-            SceneManager.activeSceneChanged -= SceneManagerOnActiveSceneChanged;
-            SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
-        }
-        public void OnLevelWasLoaded(int level)
-        {
+            threshold = ModPrefs.GetFloat(name, "FPSThreshold", threshold, true);
+            yeet = ModPrefs.GetBool(name, "FPSCheckerOn", yeet, true);
         }
 
-        public void OnLevelWasInitialized(int level)
+        public void Start()
         {
         }
-
-        //This is where the plugin starts!
 
         //Defining the time to repeat the OnUpdate Function
         private float nextActionTime = 0.0f;
         public float period = 0.1f;
 
-        //Previous Saber Values
+        //Previous Saber and FPS Values
         private static Vector3 PreviousLeftSaberHandleLocation;
         private static Vector3 PreviousLeftSaberHandleLocation2;
+        private static float despacito;
 
-        //Repeat The Thing
-        public void OnUpdate()
+        public void Update()
         {
             //Slowing The Repeat Thing
+            PlayerController HEL = Resources.FindObjectsOfTypeAll<PlayerController>().FirstOrDefault();
             if (Time.time > nextActionTime)
             {
                 nextActionTime += period;
 
                 //Loading In Things I Need
-                PlayerController HEL = Resources.FindObjectsOfTypeAll<PlayerController>().FirstOrDefault();
                 GamePauseManager GMM = Resources.FindObjectsOfTypeAll<GamePauseManager>().FirstOrDefault();
                 GameplayManager PMM = Resources.FindObjectsOfTypeAll<GameplayManager>().FirstOrDefault();
 
@@ -74,7 +59,7 @@ namespace AurosAutoPause
                 {
                     //FPS CHECKER
                     float fps = 1.0f / Time.deltaTime;
-                    if (fps < 40.0f)
+                    if (fps < threshold && fps < despacito && yeet == true)
                     {
                         if (PMM != null)
                         {
@@ -91,14 +76,12 @@ namespace AurosAutoPause
                         }
                     }
 
-                    //Set Saber Locations To Previous Saber Location
+                    //Set Saber Locations To Previous Saber Location and do FPS value thing
                     PreviousLeftSaberHandleLocation = LeftSaberHandleLocation;
                     PreviousLeftSaberHandleLocation2 = RightSaberHandleLocation;
+                    despacito = fps;
                 }
             }
-        }
-        public void OnFixedUpdate()
-        {
         }
     }
 }
