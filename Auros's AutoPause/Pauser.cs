@@ -8,21 +8,73 @@ namespace AurosAutoPause
     public class Pauser : MonoBehaviour
     {
         public static float threshold = 40.0f;
-        public static bool yeet = true;
+        public static bool yeet = false;
+        public static float period = 0.1f;
+        public static bool despa = true;
+
+        PlayerController _HEL;
+        PlayerController HEL
+        {
+            get
+            {
+                if (_HEL == null)
+                    _HEL = Resources.FindObjectsOfTypeAll<PlayerController>().FirstOrDefault();
+
+                return _HEL;
+            }
+        }
+
+        GamePauseManager _GMM;
+        GamePauseManager GMM
+        {
+            get
+            {
+                if (_GMM == null)
+                    _GMM = Resources.FindObjectsOfTypeAll<GamePauseManager>().FirstOrDefault();
+
+                return _GMM;
+            }
+        }
+
+        GameplayManager _PMM;
+        GameplayManager PMM
+        {
+            get
+            {
+                if (_PMM == null)
+                    _PMM = Resources.FindObjectsOfTypeAll<GameplayManager>().FirstOrDefault();
+
+                return _PMM;
+            }
+        }
+
+        IEnumerator Girlfriend()
+        {
+            yield return new WaitForSeconds(1);
+        }
+
 
         public void Awake()
         {
+            despa = ModPrefs.GetBool(name, "Enabled", despa, true);
             threshold = ModPrefs.GetFloat(name, "FPSThreshold", threshold, true);
             yeet = ModPrefs.GetBool(name, "FPSCheckerOn", yeet, true);
+            period = ModPrefs.GetFloat(name, "ResponseTime", period, true);
+
+            _HEL = null;
+            _GMM = null;
+            _PMM = null;
+
+            StartCoroutine(Girlfriend());
+
         }
 
         public void Start()
         {
+            PMM.ResumeFromPause();
         }
 
-        //Defining the time to repeat the OnUpdate Function
         private float nextActionTime = 0.0f;
-        public float period = 0.1f;
 
         //Previous Saber and FPS Values
         private static Vector3 PreviousLeftSaberHandleLocation;
@@ -32,14 +84,10 @@ namespace AurosAutoPause
         public void Update()
         {
             //Slowing The Repeat Thing
-            PlayerController HEL = Resources.FindObjectsOfTypeAll<PlayerController>().FirstOrDefault();
-            if (Time.time > nextActionTime)
+            if (Time.time > nextActionTime && despa == true)
             {
                 nextActionTime += period;
 
-                //Loading In Things I Need
-                GamePauseManager GMM = Resources.FindObjectsOfTypeAll<GamePauseManager>().FirstOrDefault();
-                GameplayManager PMM = Resources.FindObjectsOfTypeAll<GameplayManager>().FirstOrDefault();
 
                 //Finding Saber Location
                 if (HEL == null)

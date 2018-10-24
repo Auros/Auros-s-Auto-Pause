@@ -1,4 +1,5 @@
-﻿using IllusionPlugin;
+﻿using BeatSaberUI;
+using IllusionPlugin;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
@@ -10,7 +11,10 @@ namespace AurosAutoPause
     public class Plugin : IPlugin
     {
         public string Name => "Auros's AutoPause";
-        public string Version => "0.1.1";
+        public string Version => "0.1.3";
+
+        private readonly string[] env = { "DefaultEnvironment", "BigMirrorEnvironment", "TriangleEnvironment", "NiceEnvironment" };
+
 
         public void OnApplicationStart()
         {
@@ -18,9 +22,15 @@ namespace AurosAutoPause
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         }
 
-        private void SceneManagerOnActiveSceneChanged(Scene arg0, Scene arg1)
+        void SceneManagerOnActiveSceneChanged(Scene arg0, Scene scene)
         {
+            if (scene.name == "Menu")
+            {
+                PauseUI.CreateSettingsUI();
+            }
+
             new GameObject("Auros's AutoPause").AddComponent<Pauser>();
+           
         }
 
         private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
@@ -45,7 +55,9 @@ namespace AurosAutoPause
         {
         }
 
-        public void OnLevelWasInitialized(int level)
+
+
+            public void OnLevelWasInitialized(int level)
         {
         }
 
