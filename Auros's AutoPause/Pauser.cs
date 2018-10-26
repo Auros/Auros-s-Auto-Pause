@@ -106,6 +106,7 @@ namespace AurosAutoPause
                 {
                     //FPS CHECKER
                     float fps = 1.0f / Time.deltaTime;
+                    
                     if (fps < threshold && fps < despacito && yeet == true && Plugin.yote == true)
                     {
                         if (PMM != null)
