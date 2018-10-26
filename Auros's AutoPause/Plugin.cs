@@ -14,7 +14,7 @@ namespace AurosAutoPause
         public string Version => "0.1.3";
 
         private readonly string[] env = { "DefaultEnvironment", "BigMirrorEnvironment", "TriangleEnvironment", "NiceEnvironment" };
-
+        public static bool yote = false;
 
         public void OnApplicationStart()
         {
@@ -28,13 +28,15 @@ namespace AurosAutoPause
             {
                 PauseUI.CreateSettingsUI();
             }
-
+            yote = false;
             new GameObject("Auros's AutoPause").AddComponent<Pauser>();
            
         }
 
         private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
         {
+            SharedCoroutineStarter.instance.StartCoroutine(DelayedYote());
+
         }
 
         public void OnApplicationQuit()
@@ -54,7 +56,11 @@ namespace AurosAutoPause
         public void OnFixedUpdate()
         {
         }
-
+        private IEnumerator DelayedYote()
+        {
+            yield return new WaitForSeconds(1f);
+            yote = true;
+        }
 
 
             public void OnLevelWasInitialized(int level)
