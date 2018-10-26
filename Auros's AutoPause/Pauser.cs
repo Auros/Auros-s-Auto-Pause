@@ -11,7 +11,6 @@ namespace AurosAutoPause
         public static bool yeet = false;
         public static float period = 0.1f;
         public static bool despa = true;
-
         PlayerController _HEL;
         PlayerController HEL
         {
@@ -107,7 +106,7 @@ namespace AurosAutoPause
                 {
                     //FPS CHECKER
                     float fps = 1.0f / Time.deltaTime;
-                    if (fps < threshold && fps < despacito && yeet == true)
+                    if (fps < threshold && fps < despacito && yeet == true && Plugin.yote == true)
                     {
                         if (PMM != null)
                         {
