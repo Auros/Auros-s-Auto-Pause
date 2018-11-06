@@ -72,6 +72,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Stuff\BSUIHelpers.cs" />
     <Compile Include="Pauser.cs" />
     <Compile Include="PauseUI.cs" />
@@ -80,6 +85,22 @@
     <Compile Include="ReflectionUtil.cs" />
     <Compile Include="Stuff\SettingsUI.cs" />
     <Compile Include="Stuff\TableViewHelper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fps.ogg" />
+    <None Include="Resources\tracking.ogg" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fps.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tracking.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

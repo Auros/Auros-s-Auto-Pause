@@ -11,7 +11,7 @@ namespace AurosAutoPause
     public class Plugin : IPlugin
     {
         public string Name => "Auros's AutoPause";
-        public string Version => "0.1.3";
+        public string Version => "1.4.0";
 
         private readonly string[] env = { "DefaultEnvironment", "BigMirrorEnvironment", "TriangleEnvironment", "NiceEnvironment" };
         public static bool yote = false;
@@ -41,7 +41,6 @@ namespace AurosAutoPause
 
         public void OnApplicationQuit()
         {
-            //sendnudestoreaxt
             SceneManager.activeSceneChanged -= SceneManagerOnActiveSceneChanged;
             SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
         }
@@ -61,8 +60,6 @@ namespace AurosAutoPause
             yield return new WaitForSeconds(1f);
             yote = true;
         }
-
-
             public void OnLevelWasInitialized(int level)
         {
         }
