@@ -63,7 +63,6 @@ namespace AurosAutoPause
             despa = ModPrefs.GetBool(name, "Enabled", despa, true);
             threshold = ModPrefs.GetFloat(name, "FPSThreshold", threshold, true);
             yeet = ModPrefs.GetBool(name, "FPSCheckerOn", yeet, true);
-            yeet = ModPrefs.GetBool(name, "RogueSaber", IWantJackBaron, true);
             period = ModPrefs.GetFloat(name, "ResponseTime", period, true);
 
             _HEL = null;
