@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using UnityEngine;
-using BeatSaberUI;
 
-namespace BeatSaberUI
+namespace AurosAutoPause
 {
 	public static class ReflectionUtil
 	{

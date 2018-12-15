@@ -39,22 +39,16 @@ namespace AurosAutoPause
             }
         }
 
-        GameplayManager _PMM;
-        GameplayManager PMM
+        StandardLevelGameplayManager _PMM;
+        StandardLevelGameplayManager PMM
         {
             get
             {
                 if (_PMM == null)
-                    _PMM = Resources.FindObjectsOfTypeAll<GameplayManager>().FirstOrDefault();
+                    _PMM = Resources.FindObjectsOfTypeAll<StandardLevelGameplayManager>().FirstOrDefault();
 
                 return _PMM;
             }
-        }
-
-        IEnumerator Girlfriend()
-        {
-            yield return new WaitForSeconds(2f);
-            yote = true;
         }
 
 
@@ -67,12 +61,10 @@ namespace AurosAutoPause
 
             _HEL = null;
             _GMM = null;
-            _PMM = null;
         }
 
         public void Start()
         {
-            StartCoroutine(Girlfriend());
         }
 
         private float nextActionTime = 0.0f;
@@ -87,70 +79,70 @@ namespace AurosAutoPause
 
             //Slowing The Repeat Thing
             if (Time.time > nextActionTime && despa == true && Plugin.yote == true)
+            {
+                nextActionTime += period;
+
+                //Finding Saber Location
+                if (HEL == null)
+                    return;
+                Saber SaberThatIsLeft = HEL.leftSaber;
+                Saber SaberThatIsRight = HEL.rightSaber;
+                Vector3 LeftSaberHandleLocation = SaberThatIsLeft.handlePos;
+                Vector3 RightSaberHandleLocation = SaberThatIsRight.handlePos;
+
+
+                //When the game is paused, saber position freezes. This if statement is to make sure that when the game is unpaused, it doesn't take the value which set off the tracking issue in the first place (if that makes any sense)
+                if (GMM != null && GMM.pause == true)
                 {
-                    nextActionTime += period;
+                    PreviousLeftSaberHandleLocation = RightSaberHandleLocation;
+                    PreviousLeftSaberHandleLocation2 = LeftSaberHandleLocation;
+                }
+                else
+                {
+                    //FPS CHECKER
+                    float fps = 1.0f / Time.deltaTime;
 
-                    //Finding Saber Location
-                    if (HEL == null)
-                        return;
-                    Saber SaberThatIsLeft = HEL.leftSaber;
-                    Saber SaberThatIsRight = HEL.rightSaber;
-                    Vector3 LeftSaberHandleLocation = SaberThatIsLeft.handlePos;
-                    Vector3 RightSaberHandleLocation = SaberThatIsRight.handlePos;
-
-
-                    //When the game is paused, saber position freezes. This if statement is to make sure that when the game is unpaused, it doesn't take the value which set off the tracking issue in the first place (if that makes any sense)
-                    if (GMM != null && GMM.pause == true)
+                    if (fps < threshold && fps < despacito && yeet == true)
                     {
-                        PreviousLeftSaberHandleLocation = RightSaberHandleLocation;
-                        PreviousLeftSaberHandleLocation2 = LeftSaberHandleLocation;
+                        if (PMM != null)
+                        {
+                            PMM.Pause();
+                            SoundPlayer DickMe = new SoundPlayer(Properties.Resources.fps);
+                            DickMe.Play();
+                            System.Console.WriteLine("[AutoPause] FPS Checker Has Just Been Activated");
+                        }
                     }
-                    else
+
+                    //TRACKING DETECTOR
+                    if (PreviousLeftSaberHandleLocation == LeftSaberHandleLocation || PreviousLeftSaberHandleLocation2 == RightSaberHandleLocation)
                     {
-                        //FPS CHECKER
-                        float fps = 1.0f / Time.deltaTime;
-
-                        if (fps < threshold && fps < despacito && yeet == true)
+                        if (PMM != null)
                         {
-                            if (PMM != null)
-                            {
-                                PMM.Pause();
-                                SoundPlayer DickMe = new SoundPlayer(Properties.Resources.fps);
-                                DickMe.Play();
-                                System.Console.WriteLine("[AutoPause] FPS Checker Has Just Been Activated");
-                            }
+                            PMM.Pause();
+                            SoundPlayer ReaxtsNerfGun = new SoundPlayer(Properties.Resources.tracking);
+                            ReaxtsNerfGun.Play();
+                            System.Console.WriteLine("[AutoPause] Tracking Detector Has Just Been Activated");
                         }
+                    }
 
-                        //TRACKING DETECTOR
-                        if (PreviousLeftSaberHandleLocation == LeftSaberHandleLocation || PreviousLeftSaberHandleLocation2 == RightSaberHandleLocation)
+                    //Set Saber Locations To Previous Saber Location and do FPS value thing
+                    PreviousLeftSaberHandleLocation = LeftSaberHandleLocation;
+                    PreviousLeftSaberHandleLocation2 = RightSaberHandleLocation;
+                    despacito = fps;
+
+                    //SABER FLY AWAYYYYYYYYYYYYYY
+                    if (LeftSaberHandleLocation.x > 1.4 || LeftSaberHandleLocation.x < -1.4 || RightSaberHandleLocation.x > 1.4 || RightSaberHandleLocation.x < -1.4 || LeftSaberHandleLocation.z > 1.3 || LeftSaberHandleLocation.z < -1.3 || RightSaberHandleLocation.z > 1.3 || RightSaberHandleLocation.z < -1.3 || LeftSaberHandleLocation.y < -0.1f || RightSaberHandleLocation.y < -0.1f)
+                    {
+                        if (PMM != null)
                         {
-                            if (PMM != null)
-                            {
-                                PMM.Pause();
-                                SoundPlayer ReaxtsNerfGun = new SoundPlayer(Properties.Resources.tracking);
-                                ReaxtsNerfGun.Play();
-                                System.Console.WriteLine("[AutoPause] Tracking Detector Has Just Been Activated");
-                        }
-                        }
-
-                        //Set Saber Locations To Previous Saber Location and do FPS value thing
-                        PreviousLeftSaberHandleLocation = LeftSaberHandleLocation;
-                        PreviousLeftSaberHandleLocation2 = RightSaberHandleLocation;
-                        despacito = fps;
-
-                        //SABER FLY AWAYYYYYYYYYYYYYY
-                        if (LeftSaberHandleLocation.x > 1.4 || LeftSaberHandleLocation.x < -1.4 || RightSaberHandleLocation.x > 1.4 || RightSaberHandleLocation.x < -1.4 || LeftSaberHandleLocation.z > 1.3 || LeftSaberHandleLocation.z < -1.3 || RightSaberHandleLocation.z > 1.3 || RightSaberHandleLocation.z < -1.3 || LeftSaberHandleLocation.y < -0.1f || RightSaberHandleLocation.y < -0.1f)
-                        {
-                            if (PMM != null)
-                            {
-                                PMM.Pause();
-                                SoundPlayer ReaxtsNerfGun = new SoundPlayer(Properties.Resources.tracking);
-                                ReaxtsNerfGun.Play();
-                                System.Console.WriteLine("[AutoPause] Saber Fly Away Has Just Been Activated");
-                            }
+                            PMM.Pause();
+                            SoundPlayer ReaxtsNerfGun = new SoundPlayer(Properties.Resources.tracking);
+                            ReaxtsNerfGun.Play();
+                            System.Console.WriteLine("[AutoPause] Saber Fly Away Has Just Been Activated");
                         }
                     }
                 }
+            }
         }
     }
 }

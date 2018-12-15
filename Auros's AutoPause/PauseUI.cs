@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using BeatSaberUI;
 using IllusionPlugin;
 
 namespace AurosAutoPause
