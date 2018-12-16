@@ -73,6 +73,7 @@ namespace AurosAutoPause
         private static Vector3 PreviousLeftSaberHandleLocation;
         private static Vector3 PreviousRightSaberHandleLocation;
         private static float prevFps;
+        private static float lastPauseTime = 0f;
 
         public void Update()
         {
@@ -102,6 +103,7 @@ namespace AurosAutoPause
                 {
                     PreviousLeftSaberHandleLocation = LeftSaberHandleLocation;
                     PreviousRightSaberHandleLocation = RightSaberHandleLocation;
+                    lastPauseTime = Time.time + 2f;
                     //System.Console.WriteLine("[AutoPause] Game Paused");
                 }
                 else
@@ -110,12 +112,11 @@ namespace AurosAutoPause
                     //FPS CHECKER
                     float fps = 1.0f / Time.deltaTime;
 
-                    if (fps < threshold && fps < prevFps && fpsCheckEnable == true)
+                    if (fps < threshold && fps < prevFps && fpsCheckEnable == true && Time.time > lastPauseTime)
                     {
                         if (gamePlayManager != null)
                         {
                             gamePlayManager.Pause();
-                            //gamePauseManager.PauseGame();
                             SoundPlayer DickMe = new SoundPlayer(Properties.Resources.fps);
                             DickMe.Play();
                             System.Console.WriteLine("[AutoPause] FPS Checker Has Just Been Activated");

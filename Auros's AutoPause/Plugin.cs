@@ -28,11 +28,11 @@ namespace AurosAutoPause
         {
             if (arg1.name == "GameCore")
             {
+                SharedCoroutineStarter.instance.StartCoroutine(DelayedEnable());
                 GameObject gameObject = new GameObject("Auros's AutoPause");
                 Pauser pause = gameObject.AddComponent<Pauser>();
                 pause.Awake();
                 System.Console.WriteLine("[AutoPause] Pauser component loaded");
-                SharedCoroutineStarter.instance.StartCoroutine(DelayedEnable());
             }
         }
 
@@ -82,7 +82,7 @@ namespace AurosAutoPause
 
         private IEnumerator DelayedEnable()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2f);
             modEnable = true;
         }
 
