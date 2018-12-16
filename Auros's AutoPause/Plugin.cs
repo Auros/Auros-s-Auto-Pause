@@ -82,8 +82,8 @@ namespace AurosAutoPause
 
         private IEnumerator DelayedEnable()
         {
-            modEnable = true;
             yield return new WaitForSeconds(1f);
+            modEnable = true;
         }
 
             public void OnLevelWasInitialized(int level)

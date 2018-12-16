@@ -12,9 +12,7 @@ namespace AurosAutoPause
         public static float threshold = 40.0f;
         public static bool fpsCheckEnable = false;
         public static float updatePeriod = 0.1f;
-        public static bool modEnable = true;
-        public static bool IWantJackBaron = true;
-        public static bool yote = false;
+        public static bool iniModEnable = true;
 
         PlayerController _playerController;
         PlayerController playerController
@@ -55,7 +53,7 @@ namespace AurosAutoPause
 
         public void Awake()
         {
-            modEnable = ModPrefs.GetBool(name, "Enabled", modEnable, true);
+            iniModEnable = ModPrefs.GetBool(name, "Enabled", iniModEnable, true);
             threshold = ModPrefs.GetFloat(name, "FPSThreshold", threshold, true);
             fpsCheckEnable = ModPrefs.GetBool(name, "FPSCheckerOn", fpsCheckEnable, true);
             updatePeriod = ModPrefs.GetFloat(name, "ResponseTime", updatePeriod, true);
@@ -81,7 +79,7 @@ namespace AurosAutoPause
             
             //System.Console.WriteLine("[AutoPause] Update Called, " + SceneManager.GetActiveScene().name);
             //Slowing The Repeat Thing
-            if (Time.time > nextActionTime && Plugin.modEnable == true)// && modEnable == true)
+            if (Time.time > nextActionTime && Plugin.modEnable == true && iniModEnable == true)
             {
                 //System.Console.WriteLine("[AutoPause] Update Slowed");
                
@@ -112,7 +110,7 @@ namespace AurosAutoPause
                     //FPS CHECKER
                     float fps = 1.0f / Time.deltaTime;
 
-                    if (fps < threshold && fps < prevFps)// && fpsCheckEnable == true)
+                    if (fps < threshold && fps < prevFps && fpsCheckEnable == true)
                     {
                         if (gamePlayManager != null)
                         {
