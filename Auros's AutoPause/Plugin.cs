@@ -13,7 +13,7 @@ namespace AurosAutoPause
 {
     public class Plugin : IPlugin
     {
-        public static bool yote = false;
+        public static bool modEnable = false;
 
         public string Name => "Auros's AutoPause";
         public string Version => "1.4.1";
@@ -24,14 +24,23 @@ namespace AurosAutoPause
             SceneManager.sceneLoaded += SceneManager_sceneLoaded;
         }
 
-        void SceneManagerOnActiveSceneChanged(Scene arg0, Scene scene)
+        void SceneManagerOnActiveSceneChanged(Scene arg0, Scene arg1)
         {
+            if (arg1.name == "GameCore")
+            {
+                SharedCoroutineStarter.instance.StartCoroutine(DelayedEnable());
+                GameObject gameObject = new GameObject("Auros's AutoPause");
+                Pauser pause = gameObject.AddComponent<Pauser>();
+                pause.Awake();
+                System.Console.WriteLine("[AutoPause] Pauser component loaded");
+            }
         }
 
         private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
         {
             if (arg0.name == "Menu")
             {
+                modEnable = false;
                 var settingsSubmenu = SettingsUI.CreateSubMenu("AutoPause");
                 var en = settingsSubmenu.AddBool("AutoPause Enabled");
                 en.GetValue += delegate { return ModPrefs.GetBool("Auros's AutoPause", "Enabled", true, true); };
@@ -47,15 +56,9 @@ namespace AurosAutoPause
                 fpsThreshold.SetValue += delegate (float value) { ModPrefs.SetFloat("Auros's AutoPause", "FPSThreshold", value); };
                 fpsThreshold.FormatValue += delegate (float value) { return string.Format("{0:0}", value); };
                 System.Console.WriteLine("[AutoPause] Settings Created");
-                System.Console.Read();
+                //System.Console.Read();
 
-                SharedCoroutineStarter.instance.StartCoroutine(DelayedYote());
-            }
-
-            if (arg0.name == "GameCore")
-            {
-                yote = false;
-                new GameObject("Auros's AutoPause").AddComponent<Pauser>();
+                //SharedCoroutineStarter.instance.StartCoroutine(DelayedEnable());
             }
         }
 
@@ -72,14 +75,17 @@ namespace AurosAutoPause
         public void OnUpdate()
         {
         }
+
         public void OnFixedUpdate()
         {
         }
-        private IEnumerator DelayedYote()
+
+        private IEnumerator DelayedEnable()
         {
-            yield return new WaitForSeconds(1f);
-            yote = true;
+            yield return new WaitForSeconds(2f);
+            modEnable = true;
         }
+
             public void OnLevelWasInitialized(int level)
         {
         }
