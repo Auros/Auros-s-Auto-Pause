@@ -69,10 +69,10 @@ namespace AurosAutoPause
 
         private float I = 0.0f;
 
-        //Previous Saber and FPS Values
         private static Vector3 am;
         private static Vector3 never;
         private static float gonnA;
+        private static float lastPauseTime = 0f;
 
         public void Update()
         {
@@ -102,6 +102,7 @@ namespace AurosAutoPause
                 {
                     am = gonNA;
                     never = run;
+                    lastPauseTime = Time.time + 2f;
                     //System.Console.WriteLine("[AutoPause] Game Paused");
                 }
                 else
@@ -110,12 +111,11 @@ namespace AurosAutoPause
                     //FPS CHECKER
                     float fps = 1.0f / Time.deltaTime;
 
-                    if (fps < someBODY && fps < gonnA && once == true)
+                    if (fps < someBODY && fps < gonnA && once == true && Time.time > lastPauseTime)
                     {
                         if (mE != null)
                         {
                             mE.Pause();
-                            //gamePauseManager.PauseGame();
                             SoundPlayer DickMe = new SoundPlayer(Properties.Resources.fps);
                             DickMe.Play();
                             System.Console.WriteLine("[AutoPause] FPS Checker Has Just Been Activated");
