@@ -26,6 +26,18 @@ namespace AurosAutoPause
 
         void SceneManagerOnActiveSceneChanged(Scene arg0, Scene arg1)
         {
+            if (arg1.name == "GameCore")
+            {
+                GameObject gameObject = new GameObject("Auros's AutoPause");
+                Pauser pause = gameObject.AddComponent<Pauser>();
+                pause.Awake();
+                System.Console.WriteLine("[AutoPause] Pauser component loaded");
+                SharedCoroutineStarter.instance.StartCoroutine(DelayedEnable());
+            }
+        }
+
+        private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
+        {
             if (arg0.name == "Menu")
             {
                 modEnable = false;
@@ -48,19 +60,6 @@ namespace AurosAutoPause
 
                 //SharedCoroutineStarter.instance.StartCoroutine(DelayedEnable());
             }
-
-            if (arg1.name == "GameCore")
-            {
-                GameObject gameObject = new GameObject("Auros's AutoPause");
-                Pauser pause = gameObject.AddComponent<Pauser>();
-                pause.Awake();
-                System.Console.WriteLine("[AutoPause] Pauser component loaded");
-                SharedCoroutineStarter.instance.StartCoroutine(DelayedEnable());
-            }
-        }
-
-        private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
-        {
         }
 
         public void OnApplicationQuit()
