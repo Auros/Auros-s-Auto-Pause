@@ -72,7 +72,7 @@ namespace AurosAutoPause
         private static Vector3 am;
         private static Vector3 never;
         private static float gonnA;
-        private static float lastPauseTime = 0f;
+        private static float give = 0f;
 
         public void Update()
         {
@@ -91,27 +91,27 @@ namespace AurosAutoPause
                     //System.Console.WriteLine("[AutoPause] Pauser HEL Null");
                     return;
                 }
-                Saber up = world.leftSaber;
-                Saber neveR = world.rightSaber;
+                Saber you = world.leftSaber;
+                Saber up = world.rightSaber;
+                Vector3 neveR = you.handlePos;
                 Vector3 gonNA = up.handlePos;
-                Vector3 run = neveR.handlePos;
 
                 //gamePauseManager.PauseGame();
                 //When the game is paused, saber position freezes. This if statement is to make sure that when the game is unpaused, it doesn't take the value which set off the tracking issue in the first place (if that makes any sense)
                 if (gonna != null && gonna.pause == true)
                 {
-                    am = gonNA;
-                    never = run;
-                    lastPauseTime = Time.time + 2f;
+                    am = neveR;
+                    never = gonNA;
+                    give = Time.time + 2f;
                     //System.Console.WriteLine("[AutoPause] Game Paused");
                 }
                 else
                 {
                     //System.Console.WriteLine("[AutoPause] Pause Checks");
                     //FPS CHECKER
-                    float fps = 1.0f / Time.deltaTime;
+                    float IdontLIKEaurossNAMINGconventions = 1.0f / Time.deltaTime;
 
-                    if (fps < someBODY && fps < gonnA && once == true && Time.time > lastPauseTime)
+                    if (IdontLIKEaurossNAMINGconventions < someBODY && IdontLIKEaurossNAMINGconventions < gonnA && once == true && Time.time > give)
                     {
                         if (mE != null)
                         {
@@ -123,7 +123,7 @@ namespace AurosAutoPause
                     }
 
                     //TRACKING DETECTOR
-                    if (am == gonNA || never == run)
+                    if (am == neveR || never == gonNA)
                     {
                         if (mE != null)
                         {
@@ -135,12 +135,12 @@ namespace AurosAutoPause
                     }
 
                     //Set Saber Locations To Previous Saber Location and do FPS value thing
-                    am = gonNA;
-                    never = run;
-                    gonnA = fps;
+                    am = neveR;
+                    never = gonNA;
+                    gonnA = IdontLIKEaurossNAMINGconventions;
 
                     //SABER FLY AWAYYYYYYYYYYYYYY
-                    if (gonNA.x > 1.4 || gonNA.x < -1.4 || run.x > 1.4 || run.x < -1.4 || gonNA.z > 1.3 || gonNA.z < -1.3 || run.z > 1.3 || run.z < -1.3 || gonNA.y < -0.1f || run.y < -0.1f)
+                    if (neveR.x > 1.4 || neveR.x < -1.4 || gonNA.x > 1.4 || gonNA.x < -1.4 || neveR.z > 1.3 || neveR.z < -1.3 || gonNA.z > 1.3 || gonNA.z < -1.3 || neveR.y < -0.1f || gonNA.y < -0.1f)
                     {
                         if (mE != null)
                         {
