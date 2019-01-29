@@ -15,6 +15,8 @@ namespace AurosAutoPause
     {
         public static bool modEnable = false;
         public static string selectedCharacteristic;
+        private static StandardLevelSceneSetupDataSO _mainGameSceneSetupData = null;
+        public static bool isInMultiplayer = false;
 
         public string Name => "Auros's AutoPause";
         public string Version => "1.5.0";
@@ -25,6 +27,29 @@ namespace AurosAutoPause
         {
             if (arg1.name == "GameCore")
             {
+                if (_mainGameSceneSetupData == null)
+                {
+                    _mainGameSceneSetupData = Resources.FindObjectsOfTypeAll<StandardLevelSceneSetupDataSO>().FirstOrDefault();
+                }
+
+                if (_mainGameSceneSetupData != null)
+                {
+                    if (PluginManager.Plugins.Any(x => x.Name == "Beat Saber Multiplayer"))
+                    {
+                        GameObject multiplayer = GameObject.Find("MultiplayerClient");
+                        if (multiplayer != null)
+                        {
+                            isInMultiplayer = true;
+                        } else
+                        {
+                            isInMultiplayer = false;
+                        }
+                    }
+                }
+
+
+
+
                 modEnable = false;
                 SharedCoroutineStarter.instance.StartCoroutine(DelayedEnable());
                 GameObject gameObject = new GameObject("Auros's AutoPause");
@@ -32,7 +57,6 @@ namespace AurosAutoPause
                 pause.Awake();
                 Console.WriteLine("[AutoPause] Pauser component loaded");
             }
-            
         }
 
         private void SceneManager_sceneLoaded(Scene arg0, LoadSceneMode arg1)
@@ -59,7 +83,7 @@ namespace AurosAutoPause
                 fpsThreshold.GetValue += delegate { return ModPrefs.GetFloat("Auros's AutoPause", "FPSThreshold", 40, true); };
                 fpsThreshold.SetValue += delegate (float value) { ModPrefs.SetFloat("Auros's AutoPause", "FPSThreshold", value); };
                 fpsThreshold.FormatValue += delegate (float value) { return string.Format("{0:0}", value); };
-                System.Console.WriteLine("[AutoPause] Settings Created");
+                Console.WriteLine("[AutoPause] Settings Created");
             }
         }
 
