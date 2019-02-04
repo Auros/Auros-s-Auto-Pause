@@ -98,7 +98,7 @@ namespace AurosAutoPause
         {
             //System.Console.WriteLine("[AutoPause] Update Called, " + SceneManager.GetActiveScene().name);
             //Slowing The Repeat Thing
-            if (Time.time > nextActionTime && Plugin.modEnable == true && iniModEnable == true && Plugin.isInMultiplayer == false)
+            if (Time.time > nextActionTime && Plugin.modEnable == true && iniModEnable == true && Plugin.isIsolated == false)
             {
                 //System.Console.WriteLine("[AutoPause] Update Slowed");
 

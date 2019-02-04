@@ -16,7 +16,8 @@ namespace AurosAutoPause
         public static bool modEnable = false;
         public static string selectedCharacteristic;
         private static StandardLevelSceneSetupDataSO _mainGameSceneSetupData = null;
-        public static bool isInMultiplayer = false;
+        internal static bool isIsolated = false;
+
 
         public string Name => "Auros's AutoPause";
         public string Version => "1.5.0";
@@ -27,35 +28,39 @@ namespace AurosAutoPause
         {
             if (arg1.name == "GameCore")
             {
+                isIsolated = BS_Utils.Gameplay.Gamemode.IsIsolatedLevel;
                 if (_mainGameSceneSetupData == null)
                 {
                     _mainGameSceneSetupData = Resources.FindObjectsOfTypeAll<StandardLevelSceneSetupDataSO>().FirstOrDefault();
                 }
-
+                
                 if (_mainGameSceneSetupData != null)
                 {
-                    if (PluginManager.Plugins.Any(x => x.Name == "Beat Saber Multiplayer"))
+                    if (!isIsolated)
                     {
-                        GameObject multiplayer = GameObject.Find("MultiplayerClient");
-                        if (multiplayer != null)
-                        {
-                            isInMultiplayer = true;
-                        } else
-                        {
-                            isInMultiplayer = false;
-                        }
+                        modEnable = false;
+                        SharedCoroutineStarter.instance.StartCoroutine(DelayedEnable());
+                        GameObject gameObject = new GameObject("Auros's AutoPause");
+                        Pauser pause = gameObject.AddComponent<Pauser>();
+                        pause.Awake();
+                        Console.WriteLine("[AutoPause] Pauser component loaded");
                     }
+                    else
+                        Console.WriteLine("Isolated");
+
+
+                }
+                else
+                {
                 }
 
 
-
-
-                modEnable = false;
-                SharedCoroutineStarter.instance.StartCoroutine(DelayedEnable());
-                GameObject gameObject = new GameObject("Auros's AutoPause");
-                Pauser pause = gameObject.AddComponent<Pauser>();
-                pause.Awake();
-                Console.WriteLine("[AutoPause] Pauser component loaded");
+                //modEnable = false;
+                //SharedCoroutineStarter.instance.StartCoroutine(DelayedEnable());
+                //GameObject gameObject = new GameObject("Auros's AutoPause");
+                //Pauser pause = gameObject.AddComponent<Pauser>();
+                //pause.Awake();
+                //Console.WriteLine("[AutoPause] Pauser component loaded");
             }
         }
 
